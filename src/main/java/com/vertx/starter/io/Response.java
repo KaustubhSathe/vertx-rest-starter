@@ -17,5 +17,21 @@ public class Response<T> {
     this.error = error;
   }
 
+  public Response(T data){
+    this.data = data;
+  }
+
+  public Response(Error error, int httpStatusCode){
+    this.error = error;
+    this.httpStatusCode = httpStatusCode;
+  }
+
+  public Response(Error error){
+    this.error = error;
+  }
+
+  public static <T> Response<T> successfulResponse(T data) {
+    return new Response<T>(data);
+  }
 
 }

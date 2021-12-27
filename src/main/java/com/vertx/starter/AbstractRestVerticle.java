@@ -54,7 +54,7 @@ public abstract class AbstractRestVerticle extends AbstractVerticle {
     router.route().handler(StaticHandler.create());
     router.get("/liveness").handler(ctx -> ctx.response().end("Success"));
     abstractRouterEndPoints.add("/liveness");
-    var routes = 
+    var routes = RestUtil.a
   }
 
 

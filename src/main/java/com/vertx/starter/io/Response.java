@@ -34,4 +34,30 @@ public class Response<T> {
     return new Response<T>(data);
   }
 
+  public static <T> Response<T> successfulResponse(T data, int httpStatusCode) {
+    Response<T> response = new Response<T>(data);
+    response.httpStatusCode = httpStatusCode;
+    return response;
+  }
+
+  public static Response errorResponse(Error error) {
+    return new Response(error);
+  }
+
+  public static Response errorResponse(Error error, int httpStatusCode) {
+    return new Response(error, httpStatusCode);
+  }
+
+  public T getData() {
+    return data;
+  }
+
+  public Error getError() {
+    return error;
+  }
+
+  @JsonIgnore
+  public int getHttpStatusCode() {
+    return httpStatusCode;
+  }
 }

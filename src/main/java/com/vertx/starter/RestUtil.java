@@ -1,5 +1,6 @@
 package com.vertx.starter;
 
+import io.vertx.rxjava3.ext.web.Route;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 
@@ -28,7 +29,11 @@ public class RestUtil {
     }
   }
 
-  public static List<AbstractRoute>
+  public static List<AbstractRoute> abstractRouteList(String packageName){
+    List<AbstractRoute> routes = new ArrayList<>();
+    List<Class<?>> classes = RestUtil.annotatedClasses(packageName, Route.class);
+
+  }
 
 
 }

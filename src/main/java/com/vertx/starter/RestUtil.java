@@ -52,6 +52,7 @@ public class RestUtil {
           Route routeAnnotation = clazz.getAnnotation(Route.class);
           if(routeAnnotation != null){
             AbstractRoute route = (AbstractRoute) GuiceContext.getInstance(clazz);
+            route.setPa
           }
         } catch () {
 

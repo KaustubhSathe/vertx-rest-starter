@@ -6,7 +6,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Route {
   String path();
-  String httpMethod() default "GET";
+  HttpMethod httpMethod() default HttpMethod.GET;
   String produces() default "application/json";
   String consumes() default  "application/json";
   String[] requiredHeaders() default {};

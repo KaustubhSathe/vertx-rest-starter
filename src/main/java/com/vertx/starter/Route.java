@@ -1,18 +1,16 @@
 package com.vertx.starter;
 
-import io.vertx.core.http.HttpMethod;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 @Target({ElementType.ANNOTATION_TYPE, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Route {
   String path();
-  HttpMethod httpMethod() default HttpMethod.GET;
+  String httpMethod() default "GET";
   String produces() default "application/json";
-  String consumes
-
+  String consumes() default  "application/json";
+  String[] requiredHeaders() default {};
+  String[] requiredQueryParams() default {};
+  String[] requiredBodyParams() default {};
+  long timeout() default 20_000L;
 }

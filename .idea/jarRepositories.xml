@@ -3,8 +3,18 @@
   <component name="RemoteRepositoriesConfiguration">
     <remote-repository>
       <option name="id" value="central" />
+      <option name="name" value="d11-releases" />
+      <option name="url" value="https://artifacts.dream11.com/artifactory/d11-groups/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
       <option name="name" value="Central Repository" />
       <option name="url" value="https://repo.maven.apache.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="fc-central" />
+      <option name="name" value="fancode-maven-releases" />
+      <option name="url" value="https://artefacts.fancode.com/repository/fancode-maven-releases/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />
@@ -15,6 +25,16 @@
       <option name="id" value="jboss.community" />
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="fc-snapshots" />
+      <option name="name" value="fancode-maven-snapshots" />
+      <option name="url" value="https://artefacts.fancode.com/repository/fancode-maven-group/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="snapshots" />
+      <option name="name" value="d11-snapshots" />
+      <option name="url" value="https://artifacts.dream11.com/artifactory/d11-groups/" />
     </remote-repository>
   </component>
 </project>

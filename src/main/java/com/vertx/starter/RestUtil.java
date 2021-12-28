@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Guice;
 import entity.VertxEntity;
 import guice.GuiceContext;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
@@ -52,13 +53,22 @@ public class RestUtil {
           Route routeAnnotation = clazz.getAnnotation(Route.class);
           if(routeAnnotation != null){
             AbstractRoute route = (AbstractRoute) GuiceContext.getInstance(clazz);
-            route.setPa
+            route.setPath(routeAnnotation.path());
+            route.setHttpMethod(HttpMethod.valueOf(routeAnnotation.httpMethod().toString()));
+            route.setProduces(routeAnnotation.produces());
+            route.setConsumes(routeAnnotation.consumes());
+            route.setRequiredHeaders(Arrays.asList(routeAnnotation.requiredHeaders()));
+            route.setRequiredBodyParams(Arrays.asList(routeAnnotation.requiredBodyParams()));
+            route.setRequiredQueryParams(Arrays.asList(routeAnnotation.requiredQueryParams()));
+            route.setTimeout(routeAnnotation.timeout());
+            routes.add(route);
           }
-        } catch () {
-
+        } catch (Exception e) {
+          log.error("Failed to initialize route", e);
         }
       });
     }
+    return routes;
   }
 
 

@@ -1,9 +1,9 @@
 package com.vertx.starter.healthcheck;
 
+import com.kaustubh.vertx.commons.utils.MapUtils;
 import io.reactivex.rxjava3.core.Single;
 import io.vertx.core.json.JsonObject;
 import lombok.val;
-import utils.MapUtils;
 
 import java.util.Arrays;
 import java.util.Map;

@@ -1,10 +1,9 @@
 package com.vertx.starter;
 
+import com.kaustubh.vertx.commons.utils.ConfigUtils;
 import com.vertx.starter.config.HttpConfig;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
-import io.vertx.core.Promise;
-import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.rxjava3.core.AbstractVerticle;
 import io.vertx.rxjava3.core.Context;
@@ -20,7 +19,7 @@ import jdk.internal.joptsimple.internal.Strings;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import lombok.var;
-import utils.ConfigUtils;
+
 
 import java.util.ArrayList;
 import java.util.List;

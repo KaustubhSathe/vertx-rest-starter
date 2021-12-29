@@ -1,13 +1,14 @@
 package com.vertx.starter.healthcheck;
 
 import com.google.common.collect.ImmutableList;
-import entity.VertxEntity;
+import com.kaustubh.vertx.commons.entity.VertxEntity;
+import com.kaustubh.vertx.commons.utils.CollectionUtils;
+import com.kaustubh.vertx.commons.utils.JsonUtils;
+import com.kaustubh.vertx.commons.utils.MapUtils;
 import io.vertx.core.json.JsonObject;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import utils.CollectionUtils;
-import utils.JsonUtils;
-import utils.MapUtils;
+
 
 import java.util.List;
 import java.util.Map;

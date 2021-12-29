@@ -2,9 +2,9 @@ package com.vertx.starter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kaustubh.vertx.commons.guice.GuiceContext;
 import com.vertx.starter.exception.RestException;
 import com.vertx.starter.io.Error;
-import guice.GuiceContext;
 import io.reactivex.rxjava3.core.Single;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;

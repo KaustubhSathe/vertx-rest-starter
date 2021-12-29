@@ -2,9 +2,8 @@ package com.vertx.starter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Guice;
-import entity.VertxEntity;
-import guice.GuiceContext;
+import com.kaustubh.vertx.commons.entity.VertxEntity;
+import com.kaustubh.vertx.commons.guice.GuiceContext;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;

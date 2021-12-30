@@ -4,7 +4,7 @@
      xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.kaustubh</groupId>
+  <groupId>com.kaustubh</groupId>
   <artifactId>vertx-rest-starter</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
@@ -34,7 +34,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.kaustubh</groupId>
+      <groupId>com.kaustubh</groupId>
       <artifactId>vertx-commons</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
@@ -63,7 +63,7 @@
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-service-proxy</artifactId>
-      <version>4.2.3</version>
+      <version>4.1.4</version>
     </dependency>
   </dependencies>
 

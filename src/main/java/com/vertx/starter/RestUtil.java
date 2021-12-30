@@ -39,7 +39,7 @@ public class RestUtil {
 
   private static synchronized void setRef(String packageName) {
     if (ref == null) {
-      ref = new Reflections();
+      ref = new Reflections(packageName);
     }
   }
 

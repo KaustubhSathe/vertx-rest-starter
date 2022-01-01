@@ -15,18 +15,19 @@ import java.util.*;
 
 @Slf4j
 public class RestUtil {
-  private static final List<Class> collectionClasses = Arrays.asList(
-    List.class,
-    Set.class,
-    ArrayList.class,
-    HashSet.class,
-    LinkedHashSet.class,
-    LinkedList.class
-  );
+  private static final List<Class> collectionClasses =
+      Arrays.asList(
+          List.class,
+          Set.class,
+          ArrayList.class,
+          HashSet.class,
+          LinkedHashSet.class,
+          LinkedList.class);
 
   private static Reflections ref;
 
-  public static List<Class<?>> annotatedClasses(String packageName, Class<? extends Annotation> annotation) {
+  public static List<Class<?>> annotatedClasses(
+      String packageName, Class<? extends Annotation> annotation) {
     List<Class<?>> annotatedClasses = new ArrayList<>();
     try {
       setRef(packageName);
@@ -47,38 +48,38 @@ public class RestUtil {
     List<AbstractRoute> routes = new ArrayList<>();
     List<Class<?>> classes = RestUtil.annotatedClasses(packageName, Route.class);
     if (classes != null && !classes.isEmpty()) {
-      classes.forEach(clazz -> {
-        try {
-          Route routeAnnotation = clazz.getAnnotation(Route.class);
-          if(routeAnnotation != null){
-            AbstractRoute route = (AbstractRoute) GuiceContext.getInstance(clazz);
-            route.setPath(routeAnnotation.path());
-            route.setHttpMethod(HttpMethod.valueOf(routeAnnotation.httpMethod().toString()));
-            route.setProduces(routeAnnotation.produces());
-            route.setConsumes(routeAnnotation.consumes());
-            route.setRequiredHeaders(Arrays.asList(routeAnnotation.requiredHeaders()));
-            route.setRequiredBodyParams(Arrays.asList(routeAnnotation.requiredBodyParams()));
-            route.setRequiredQueryParams(Arrays.asList(routeAnnotation.requiredQueryParams()));
-            route.setTimeout(routeAnnotation.timeout());
-            routes.add(route);
-          }
-        } catch (Exception e) {
-          log.error("Failed to initialize route", e);
-        }
-      });
+      classes.forEach(
+          clazz -> {
+            try {
+              Route routeAnnotation = clazz.getAnnotation(Route.class);
+              if (routeAnnotation != null) {
+                AbstractRoute route = (AbstractRoute) GuiceContext.getInstance(clazz);
+                route.setPath(routeAnnotation.path());
+                route.setHttpMethod(HttpMethod.valueOf(routeAnnotation.httpMethod().toString()));
+                route.setProduces(routeAnnotation.produces());
+                route.setConsumes(routeAnnotation.consumes());
+                route.setRequiredHeaders(Arrays.asList(routeAnnotation.requiredHeaders()));
+                route.setRequiredBodyParams(Arrays.asList(routeAnnotation.requiredBodyParams()));
+                route.setRequiredQueryParams(Arrays.asList(routeAnnotation.requiredQueryParams()));
+                route.setTimeout(routeAnnotation.timeout());
+                routes.add(route);
+              }
+            } catch (Exception e) {
+              log.error("Failed to initialize route", e);
+            }
+          });
     }
     return routes;
   }
 
-
   public static String getString(Object object) throws JsonProcessingException {
     ObjectMapper objectMapper = GuiceContext.getInstance(ObjectMapper.class);
     String str;
-    if(object instanceof String){
-      str = (String)object;
-    }else if(object instanceof JsonObject){
+    if (object instanceof String) {
+      str = (String) object;
+    } else if (object instanceof JsonObject) {
       str = String.valueOf(object);
-    }else if (collectionClasses.contains(object.getClass())) {
+    } else if (collectionClasses.contains(object.getClass())) {
       str = new JsonArray(new ArrayList((Collection) object)).toString();
     } else if (object instanceof VertxEntity) {
       str = ((VertxEntity) object).toJson().toString();
@@ -87,6 +88,4 @@ public class RestUtil {
     }
     return str;
   }
-
-
 }

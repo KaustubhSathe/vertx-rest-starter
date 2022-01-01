@@ -16,15 +16,15 @@ import java.util.Map;
 public class Request {
   RoutingContext routingContext;
   MultiMap headers;
-  Map<String,String> pathParams;
+  Map<String, String> pathParams;
   MultiMap queryParams;
   JsonObject body;
 
-  public String getHeader(String name){
+  public String getHeader(String name) {
     return headers != null ? headers.get(name) : null;
   }
 
-  public String getPathParam(String name){
+  public String getPathParam(String name) {
     return this.pathParams != null ? pathParams.get(name) : null;
   }
 
@@ -44,9 +44,13 @@ public class Request {
   public String toString() {
     final StringBuilder sb = new StringBuilder("Request{");
     sb.append("body=").append(body != null ? body.toString() : "no body");
-    sb.append(", headers=").append(headers != null ? headers.toString().replace("\n", ", ") : "no headers");
-    sb.append(", pathParams=").append(pathParams != null ? pathParams.toString() : "no path params");
-    sb.append(", queryParams=").append(queryParams != null ? queryParams.toString().replace("\n", ", ") : "no query params");
+    sb.append(", headers=")
+        .append(headers != null ? headers.toString().replace("\n", ", ") : "no headers");
+    sb.append(", pathParams=")
+        .append(pathParams != null ? pathParams.toString() : "no path params");
+    sb.append(", queryParams=")
+        .append(
+            queryParams != null ? queryParams.toString().replace("\n", ", ") : "no query params");
     sb.append('}');
     return sb.toString();
   }

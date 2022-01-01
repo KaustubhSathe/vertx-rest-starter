@@ -23,7 +23,8 @@ import java.util.stream.Stream;
 @Slf4j
 public abstract class AbstractRoute<T> implements Handler<RoutingContext> {
   private static final Error INVALID_PARAM_ERROR = Error.of("MG1000", "Missing Parameters");
-  private static final RestException INVALID_REST_EXCEPTION = new RestException("Invalid Or Missing Request Params.", INVALID_PARAM_ERROR);
+  private static final RestException INVALID_REST_EXCEPTION =
+      new RestException("Invalid Or Missing Request Params.", INVALID_PARAM_ERROR);
 
   protected ObjectMapper objectMapper;
   private String path;
@@ -35,16 +36,18 @@ public abstract class AbstractRoute<T> implements Handler<RoutingContext> {
   private List<String> requiredBodyParams;
   private long timeout;
 
-  public AbstractRoute(){
+  public AbstractRoute() {
     this.objectMapper = GuiceContext.getInstance(ObjectMapper.class);
   }
 
   private void prepareResponse(RoutingContext context, T response, long startTime) {
     if (!context.response().ended()) {
       try {
-        setResponseHeader(context.response(), response)
-          .end(RestUtil.getString(response));
-        log.info("[RESPONSE TIME] Time taken for route: {} : {}", path, (System.currentTimeMillis() - startTime));
+        setResponseHeader(context.response(), response).end(RestUtil.getString(response));
+        log.info(
+            "[RESPONSE TIME] Time taken for route: {} : {}",
+            path,
+            (System.currentTimeMillis() - startTime));
       } catch (JsonProcessingException e) {
         handleError(context, e);
       }
@@ -65,34 +68,33 @@ public abstract class AbstractRoute<T> implements Handler<RoutingContext> {
       validateRequestQueryParams(request.getQueryParams());
       return Single.just(request);
     } catch (Exception e) {
-      log.error("Error in request! {}, , headers required : {}, headers received : {}", path, requiredHeaders, request.getHeaders(), e);
+      log.error(
+          "Error in request! {}, , headers required : {}, headers received : {}",
+          path,
+          requiredHeaders,
+          request.getHeaders(),
+          e);
       return Single.error(e);
     }
   }
 
   protected void validateRequestBody(final JsonObject jsonObject) throws Exception {
-    if (!Optional.ofNullable(getRequiredBodyParams())
-      .orElse(new ArrayList<>())
-      .stream()
-      .allMatch(val -> jsonObject.containsKey(val))) {
+    if (!Optional.ofNullable(getRequiredBodyParams()).orElse(new ArrayList<>()).stream()
+        .allMatch(val -> jsonObject.containsKey(val))) {
       throw INVALID_REST_EXCEPTION;
     }
   }
 
   protected void validateRequestQueryParams(final MultiMap queryParams) throws Exception {
-    if (!Optional.ofNullable(getRequiredQueryParams())
-      .orElse(new ArrayList<>())
-      .stream()
-      .allMatch(queryParams::contains)) {
+    if (!Optional.ofNullable(getRequiredQueryParams()).orElse(new ArrayList<>()).stream()
+        .allMatch(queryParams::contains)) {
       throw INVALID_REST_EXCEPTION;
     }
   }
 
   protected void validateRequestHeaders(MultiMap headers) throws Exception {
-    if (!Optional.ofNullable(getRequiredHeaders())
-      .orElse(new ArrayList<>())
-      .stream()
-      .allMatch(headers::contains)) {
+    if (!Optional.ofNullable(getRequiredHeaders()).orElse(new ArrayList<>()).stream()
+        .allMatch(headers::contains)) {
       throw INVALID_REST_EXCEPTION;
     }
   }
@@ -112,20 +114,20 @@ public abstract class AbstractRoute<T> implements Handler<RoutingContext> {
     final long startTime = System.currentTimeMillis();
     log.info("STATED REQUEST : {}", path);
 
-    final Request request = new Request(
-      routingContext,
-      routingContext.request().headers(),
-      routingContext.pathParams(),
-      routingContext.queryParams(),
-      getBody(routingContext));
+    final Request request =
+        new Request(
+            routingContext,
+            routingContext.request().headers(),
+            routingContext.pathParams(),
+            routingContext.queryParams(),
+            getBody(routingContext));
     log.info("Path: {}  Request: {}", path, request);
 
     validateRequest(request)
-      .flatMap(this::handle)
-      .subscribe(
-        success -> prepareResponse(routingContext, success, startTime),
-        error -> handleError(routingContext, error)
-      );
+        .flatMap(this::handle)
+        .subscribe(
+            success -> prepareResponse(routingContext, success, startTime),
+            error -> handleError(routingContext, error));
   }
 
   @Override
@@ -149,7 +151,7 @@ public abstract class AbstractRoute<T> implements Handler<RoutingContext> {
     if (Stream.of(HttpMethod.GET).anyMatch(method -> httpMethod == method)) {
       return null;
     } else if ("application/x-www-form-urlencoded"
-      .equalsIgnoreCase(context.request().headers().get("Content-Type"))) {
+        .equalsIgnoreCase(context.request().headers().get("Content-Type"))) {
       Map map = getMap(context.request().formAttributes());
       return new JsonObject(map);
     } else {
@@ -167,23 +169,24 @@ public abstract class AbstractRoute<T> implements Handler<RoutingContext> {
       throwable = this.handleError(throwable);
       if (throwable instanceof RestException) {
         RestException e = ((RestException) throwable);
-        context.response()
-          .putHeader("content-type", "application/json")
-          .setStatusCode(e.getHttpStatusCode())
-          .end(e.toJson().toString());
+        context
+            .response()
+            .putHeader("content-type", "application/json")
+            .setStatusCode(e.getHttpStatusCode())
+            .end(e.toJson().toString());
       } else if (throwable instanceof ServiceException) {
         ServiceException e = ((ServiceException) throwable);
         context
-          .response()
-          .putHeader("content-type", "application/json")
-          .setStatusCode(e.failureCode())
-          .end(e.getMessage());
+            .response()
+            .putHeader("content-type", "application/json")
+            .setStatusCode(e.failureCode())
+            .end(e.getMessage());
       } else {
         context
-          .response()
-          .putHeader("content-type", "application/json")
-          .setStatusCode(500)
-          .end(throwable.getMessage());
+            .response()
+            .putHeader("content-type", "application/json")
+            .setStatusCode(500)
+            .end(throwable.getMessage());
       }
     }
   }

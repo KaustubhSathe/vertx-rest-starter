@@ -9,22 +9,22 @@ import io.vertx.core.json.JsonObject;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
-
 import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
 public class HealthCheckResponse extends VertxEntity {
-  @Getter
-  private final List<Check> checks;
+  @Getter private final List<Check> checks;
 
   @Override
-  public JsonObject toJson(){
-    val json = JsonUtils.jsonMerge(ImmutableList.of(
-      JsonUtils.jsonFrom("status", getStatus().getName()),
-      JsonUtils.jsonFrom("checks", JsonUtils.jsonFrom(MapUtils.map(Check::toJson, getChecksAsMap())))
-    ));
+  public JsonObject toJson() {
+    val json =
+        JsonUtils.jsonMerge(
+            ImmutableList.of(
+                JsonUtils.jsonFrom("status", getStatus().getName()),
+                JsonUtils.jsonFrom(
+                    "checks", JsonUtils.jsonFrom(MapUtils.map(Check::toJson, getChecksAsMap())))));
     // Adding this extra explict data key until we have a workaround for error case
     return JsonUtils.jsonFrom("data", json);
   }
@@ -46,7 +46,7 @@ public class HealthCheckResponse extends VertxEntity {
     DOWN("DOWN");
 
     private final String name;
-    }
+  }
 
   @Value
   static class Check extends VertxEntity {
@@ -55,14 +55,14 @@ public class HealthCheckResponse extends VertxEntity {
     Status status;
     String type;
 
-    Check(String type, Throwable error){
+    Check(String type, Throwable error) {
       this.type = type;
       this.response = null;
       this.error = error.toString();
       this.status = Status.DOWN;
     }
 
-    Check(String type, JsonObject response){
+    Check(String type, JsonObject response) {
       this.type = type;
       this.response = response;
       this.error = null;
@@ -70,9 +70,8 @@ public class HealthCheckResponse extends VertxEntity {
     }
 
     @Override
-    public JsonObject toJson(){
+    public JsonObject toJson() {
       return super.toJson(true);
     }
   }
-
 }

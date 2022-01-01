@@ -13,18 +13,19 @@ public class Error {
   private final String message;
 
   @JsonCreator
-  public Error(@JsonProperty("code") String code,@JsonProperty("message") String message){
+  public Error(@JsonProperty("code") String code, @JsonProperty("message") String message) {
     this.code = code;
     this.message = message;
   }
 
-  public static Error of(String code, String message){
+  public static Error of(String code, String message) {
     return new Error(code, message);
   }
 
   @JsonIgnore
-  public String toJsonString(){
-    return new JsonObject().put("error", new JsonObject().put("code", code).put("message", message)).encode();
+  public String toJsonString() {
+    return new JsonObject()
+        .put("error", new JsonObject().put("code", code).put("message", message))
+        .encode();
   }
-
 }

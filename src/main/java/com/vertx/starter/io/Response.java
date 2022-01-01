@@ -8,25 +8,24 @@ public class Response<T> {
   private T data;
   private Error error;
 
-  @JsonIgnore
-  private int httpStatusCode = 200;
+  @JsonIgnore private int httpStatusCode = 200;
 
   @JsonCreator()
-  public Response(@JsonProperty("data") T data,@JsonProperty("error") Error error){
+  public Response(@JsonProperty("data") T data, @JsonProperty("error") Error error) {
     this.data = data;
     this.error = error;
   }
 
-  public Response(T data){
+  public Response(T data) {
     this.data = data;
   }
 
-  public Response(Error error, int httpStatusCode){
+  public Response(Error error, int httpStatusCode) {
     this.error = error;
     this.httpStatusCode = httpStatusCode;
   }
 
-  public Response(Error error){
+  public Response(Error error) {
     this.error = error;
   }
 

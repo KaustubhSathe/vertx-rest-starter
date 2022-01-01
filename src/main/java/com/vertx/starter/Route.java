@@ -6,11 +6,18 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Route {
   String path();
+
   HttpMethod httpMethod() default HttpMethod.GET;
+
   String produces() default "application/json";
-  String consumes() default  "application/json";
+
+  String consumes() default "application/json";
+
   String[] requiredHeaders() default {};
+
   String[] requiredQueryParams() default {};
+
   String[] requiredBodyParams() default {};
+
   long timeout() default 20_000L;
 }

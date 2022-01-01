@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import lombok.var;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,15 +32,16 @@ public abstract class AbstractRestVerticle extends AbstractVerticle {
 
   private final List<String> abstractRouteEndPoints = new ArrayList<>();
 
-  public AbstractRestVerticle(String packageName){
+  public AbstractRestVerticle(String packageName) {
     this.packageName = packageName;
     this.mountPath = "";
   }
-  public AbstractRestVerticle(String packageName, String mountPath){
+
+  public AbstractRestVerticle(String packageName, String mountPath) {
     this.packageName = packageName;
-    if(!Strings.isNullOrEmpty(mountPath)){
+    if (!Strings.isNullOrEmpty(mountPath)) {
       this.mountPath = "/" + mountPath;
-    }else{
+    } else {
       this.mountPath = "";
     }
   }
@@ -49,47 +49,64 @@ public abstract class AbstractRestVerticle extends AbstractVerticle {
   @Override
   public Completable rxStart() {
     init();
-    return startHttpServer().doOnSuccess(server -> {
-      this.httpServer = server;
-    }).ignoreElement();
+    return startHttpServer()
+        .doOnSuccess(
+            server -> {
+              this.httpServer = server;
+            })
+        .ignoreElement();
   }
 
-  protected void init(){
-    httpConfig = ConfigUtils.fromConfigFile("config/http-server/http-server-%s.conf", HttpConfig.class);
+  protected void init() {
+    httpConfig =
+        ConfigUtils.fromConfigFile("config/http-server/http-server-%s.conf", HttpConfig.class);
   }
 
   private Single<HttpServer> startHttpServer() {
-    HttpServerOptions options = new HttpServerOptions()
-      .setHost(httpConfig.getHost())
-      .setPort(httpConfig.getPort())
-      .setIdleTimeout(httpConfig.getIdleTimeOut())
-      .setUseAlpn(httpConfig.isUseAlpn());
+    HttpServerOptions options =
+        new HttpServerOptions()
+            .setHost(httpConfig.getHost())
+            .setPort(httpConfig.getPort())
+            .setIdleTimeout(httpConfig.getIdleTimeOut())
+            .setUseAlpn(httpConfig.isUseAlpn());
 
     Router router = getRouter();
-    //add swagger regex
+    // add swagger regex
     abstractRouteEndPoints.add("/swagger(.*)");
     val server = vertx.createHttpServer(options);
-    val handleRequests = server.requestStream()
-      .toFlowable()
-      .map(HttpServerRequest::pause)
-      .onBackpressureDrop(req -> {
-        log.error("Dropping request with status 503");
-        req.response().setStatusCode(503).end();
-      })
-      .observeOn(RxHelper.scheduler(new Context(this.context)))
-      .doOnNext(req -> router.handle(req))
-      .map(HttpServerRequest::resume)
-      .doOnError(error -> log.error("Uncaught ERROR while handling request", error))
-      .ignoreElements();
+    val handleRequests =
+        server
+            .requestStream()
+            .toFlowable()
+            .map(HttpServerRequest::pause)
+            .onBackpressureDrop(
+                req -> {
+                  log.error("Dropping request with status 503");
+                  req.response().setStatusCode(503).end();
+                })
+            .observeOn(RxHelper.scheduler(new Context(this.context)))
+            .doOnNext(req -> router.handle(req))
+            .map(HttpServerRequest::resume)
+            .doOnError(error -> log.error("Uncaught ERROR while handling request", error))
+            .ignoreElements();
 
     return server
-      .rxListen()
-      .doOnSuccess(res -> log.info("Started http server at " + options.getPort() + " package : " + packageName))
-      .doOnError(error -> log.error("Failed to start http server at port : " + options.getPort() + " with error " + error.getMessage()))
-      .doOnSubscribe(disposable -> handleRequests.subscribe());
+        .rxListen()
+        .doOnSuccess(
+            res ->
+                log.info(
+                    "Started http server at " + options.getPort() + " package : " + packageName))
+        .doOnError(
+            error ->
+                log.error(
+                    "Failed to start http server at port : "
+                        + options.getPort()
+                        + " with error "
+                        + error.getMessage()))
+        .doOnSubscribe(disposable -> handleRequests.subscribe());
   }
 
-  protected Router getRouter(){
+  protected Router getRouter() {
     Router router = Router.router(this.vertx);
     router.route().handler(BodyHandler.create());
     router.route().handler(ResponseContentTypeHandler.create());
@@ -98,20 +115,19 @@ public abstract class AbstractRestVerticle extends AbstractVerticle {
     abstractRouteEndPoints.add("/liveness");
     var routes = RestUtil.abstractRouteList(this.packageName);
     log.info("AbstractRoutes : " + routes.size());
-    routes.forEach(route -> {
-      router
-        .routeWithRegex(route.getHttpMethod(), "(?i)" + this.mountPath + route.getPath())
-        .consumes(route.getConsumes())
-        .produces(route.getProduces())
-        .handler(TimeoutHandler.create(route.getTimeout(), 594))
-        .handler(route);
-      abstractRouteEndPoints.add("(?i)" + this.mountPath + route.getPath());
-    });
+    routes.forEach(
+        route -> {
+          router
+              .routeWithRegex(route.getHttpMethod(), "(?i)" + this.mountPath + route.getPath())
+              .consumes(route.getConsumes())
+              .produces(route.getProduces())
+              .handler(TimeoutHandler.create(route.getTimeout(), 594))
+              .handler(route);
+          abstractRouteEndPoints.add("(?i)" + this.mountPath + route.getPath());
+        });
 
     return router;
   }
-
-
 
   @Override
   public Completable rxStop() {

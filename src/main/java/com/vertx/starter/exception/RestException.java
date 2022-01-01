@@ -3,7 +3,7 @@ package com.vertx.starter.exception;
 import com.vertx.starter.io.Error;
 import io.vertx.core.json.JsonObject;
 
-public class RestException extends RuntimeException{
+public class RestException extends RuntimeException {
   private final Error error;
   private int httpStatusCode = 400;
 
@@ -72,13 +72,14 @@ public class RestException extends RuntimeException{
   }
 
   public JsonObject toJson() {
-    JsonObject errorJson = new JsonObject()
-      .put("message", this.error.getMessage())
-      .put("cause", this.getCause() == null ? this.getMessage() : this.getCause().getMessage())
-      .put("code", this.error.getCode());
+    JsonObject errorJson =
+        new JsonObject()
+            .put("message", this.error.getMessage())
+            .put(
+                "cause", this.getCause() == null ? this.getMessage() : this.getCause().getMessage())
+            .put("code", this.error.getCode());
 
-    return new JsonObject()
-      .put("error", errorJson);
+    return new JsonObject().put("error", errorJson);
   }
 
   @Override
